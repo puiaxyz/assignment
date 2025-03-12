@@ -2,9 +2,9 @@
 
 namespace App\Filament\Resources;
 
-use App\Filament\Resources\ProductResource\Pages;
-use App\Filament\Resources\ProductResource\RelationManagers;
-use App\Models\Product;
+use App\Filament\Resources\SalesResource\Pages;
+use App\Filament\Resources\SalesResource\RelationManagers;
+use App\Models\Sales;
 use Filament\Forms;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
@@ -13,9 +13,9 @@ use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
 
-class ProductResource extends Resource
+class SalesResource extends Resource
 {
-    protected static ?string $model = Product::class;
+    protected static ?string $model = Sales::class;
 
     protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
 
@@ -23,9 +23,7 @@ class ProductResource extends Resource
     {
         return $form
             ->schema([
-                Forms\Components\Textarea::make('name')->columnSpanFull(),
-                Forms\Components\Textarea::make('barcode')->columnSpanFull(),
-                Forms\Components\Textarea::make('description')->columnSpanFull(),
+                //
             ]);
     }
 
@@ -44,7 +42,6 @@ class ProductResource extends Resource
             ])
             ->actions([
                 Tables\Actions\EditAction::make(),
-                Tables\Actions\DeleteAction::make(),
             ])
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([
@@ -63,9 +60,9 @@ class ProductResource extends Resource
     public static function getPages(): array
     {
         return [
-            'index' => Pages\ListProducts::route('/'),
-            'create' => Pages\CreateProduct::route('/create'),
-            'edit' => Pages\EditProduct::route('/{record}/edit'),
+            'index' => Pages\ListSales::route('/'),
+            'create' => Pages\CreateSales::route('/create'),
+            'edit' => Pages\EditSales::route('/{record}/edit'),
         ];
     }
 }

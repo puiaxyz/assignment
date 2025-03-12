@@ -2,9 +2,9 @@
 
 namespace App\Filament\Resources;
 
-use App\Filament\Resources\ProductResource\Pages;
-use App\Filament\Resources\ProductResource\RelationManagers;
-use App\Models\Product;
+use App\Filament\Resources\StockResource\Pages;
+use App\Filament\Resources\StockResource\RelationManagers;
+use App\Models\Stock;
 use Filament\Forms;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
@@ -13,9 +13,9 @@ use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
 
-class ProductResource extends Resource
+class StockResource extends Resource
 {
-    protected static ?string $model = Product::class;
+    protected static ?string $model = Stock::class;
 
     protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
 
@@ -23,9 +23,9 @@ class ProductResource extends Resource
     {
         return $form
             ->schema([
-                Forms\Components\Textarea::make('name')->columnSpanFull(),
-                Forms\Components\Textarea::make('barcode')->columnSpanFull(),
-                Forms\Components\Textarea::make('description')->columnSpanFull(),
+                Forms\Components\Select::make('product_id')->label('Product')->options(\App\Models\Product::pluck('name', 'id'))  ->searchable() ->required(),
+                Forms\Components\Textarea::make('price')->columnSpanFull(),
+                Forms\Components\Textarea::make('quantity')->columnSpanFull(),
             ]);
     }
 
@@ -34,17 +34,15 @@ class ProductResource extends Resource
         return $table
             ->columns([
                 Tables\Columns\TextColumn::make('id')->sortable(),
-                Tables\Columns\TextColumn::make('name'),
-                Tables\Columns\TextColumn::make('barcode'),
-                Tables\Columns\TextColumn::make('description'),
-
+                Tables\Columns\TextColumn::make('product_id')->sortable(),
+                Tables\Columns\TextColumn::make('price'),
+                Tables\Columns\TextColumn::make('quantity'),
             ])
             ->filters([
                 //
             ])
             ->actions([
                 Tables\Actions\EditAction::make(),
-                Tables\Actions\DeleteAction::make(),
             ])
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([
@@ -63,9 +61,9 @@ class ProductResource extends Resource
     public static function getPages(): array
     {
         return [
-            'index' => Pages\ListProducts::route('/'),
-            'create' => Pages\CreateProduct::route('/create'),
-            'edit' => Pages\EditProduct::route('/{record}/edit'),
+            'index' => Pages\ListStocks::route('/'),
+            'create' => Pages\CreateStock::route('/create'),
+            'edit' => Pages\EditStock::route('/{record}/edit'),
         ];
     }
 }
