@@ -24,8 +24,8 @@ class StockResource extends Resource
         return $form
             ->schema([
                 Forms\Components\Select::make('product_id')->label('Product')->options(\App\Models\Product::pluck('name', 'id'))  ->searchable() ->required(),
-                Forms\Components\Textarea::make('price')->columnSpanFull(),
-                Forms\Components\Textarea::make('quantity')->columnSpanFull(),
+                Forms\Components\Textarea::make('price')->columnSpanFull()->numeric()->min(0),
+                Forms\Components\Textarea::make('quantity')->columnSpanFull()->numeric(),
             ]);
     }
 
@@ -39,7 +39,7 @@ class StockResource extends Resource
                 Tables\Columns\TextColumn::make('quantity'),
             ])
             ->filters([
-                //
+               
             ])
             ->actions([
                 Tables\Actions\EditAction::make(),
