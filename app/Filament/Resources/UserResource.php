@@ -23,7 +23,16 @@ class UserResource extends Resource
     {
         return $form
             ->schema([
-                //
+
+                Forms\Components\TextInput::make('name')->columnSpanFull()->required()->maxLength(255),
+                Forms\Components\TextInput::make('email')->columnSpanFull()->required()->maxLength(255),
+                Forms\Components\TextInput::make('description')->columnSpanFull()->maxLength(255),
+                Forms\Components\TextInput::make('phone_no')->tel(),  //TODO: put phone no in users table
+                Forms\Components\Select::make('roles')->relationship('roles', 'name')->preload()->searchable()->dehydrated(fn ($state) => filled($state))->nullable()->maxLength(255),
+                Forms\Components\TextInput::make('password')->password()->minLength(6)->confirmed(),
+                Forms\Components\TextInput::make('password_confirmation')->label("Confirm password")->same('password')->password()->dehydrated(false),
+
+
             ]);
     }
 
@@ -31,7 +40,11 @@ class UserResource extends Resource
     {
         return $table
             ->columns([
-                //
+                Tables\Columns\TextColumn::make('id')->sortable()->label('ID'),
+                Tables\Columns\TextColumn::make('name')->sortable()->label('Name'),
+                Tables\Columns\TextColumn::make('email')->label('Email'),
+                Tables\Columns\TextColumn::make('quantity')->label('Quantity'),
+                Tables\Columns\TextColumn::make('phone_no')->label('Phone Number'),
             ])
             ->filters([
                 //

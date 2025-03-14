@@ -9,6 +9,7 @@ use Filament\Tables;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
+use Tables\Columns;
 
 class StockRelationManager extends RelationManager
 {
@@ -20,7 +21,8 @@ class StockRelationManager extends RelationManager
             ->schema([
                 Forms\Components\TextInput::make('price')
                     ->required()
-                    ->maxLength(255),
+                    ->maxLength(255)->rule('min:0'),
+                Forms\Components\TextInput::make('quantity')->numeric()->rule('min:0'),
             ]);
     }
 
@@ -30,6 +32,7 @@ class StockRelationManager extends RelationManager
             ->recordTitleAttribute('price')
             ->columns([
                 Tables\Columns\TextColumn::make('price'),
+                Tables\Columns\TextColumn::make('quantity'),
             ])
             ->filters([
                 //
