@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Filament\Resources\ProductResource\RelationManagers;
+namespace App\Filament\App\Resources\ProductResource\RelationManagers;
 
 use Filament\Forms;
 use Filament\Forms\Form;
@@ -13,7 +13,7 @@ use Tables\Columns;
 
 class StocksRelationManager extends RelationManager
 {
-    protected static string $relationship = 'Stocks';
+    protected static string $relationship = 'Stock';
 
     public function form(Form $form): Form
     {

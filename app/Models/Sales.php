@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 class Sales extends Model
 {
     use HasFactory;
-    protected $fillable = ['total_amount', 'discount', 'final_amount', 'payment_method']; //payment khi cash emo upi chauh dah phot
+    protected $fillable = ['user_id', 'invoice_number', 'total_amount', 'discount_type', 'discount_value', 'final_amount', 'payment_method'];
 
     public function user()
     {
@@ -15,8 +15,7 @@ class Sales extends Model
     }
 
     public function saleItems()
-{
-    return $this->hasMany(SaleItems::class);
-}
-
+    {
+        return $this->hasMany(SaleItems::class);
+    }
 }

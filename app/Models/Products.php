@@ -9,7 +9,7 @@ class Products extends Model
     use HasFactory;
     protected $fillable = ['name', 'barcode', 'description'];
 
-    public function stock()
+    public function stocks()
     {
         return $this->hasMany(Stocks::class);
     }
