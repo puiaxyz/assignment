@@ -23,16 +23,13 @@ class UserResource extends Resource
     {
         return $form
             ->schema([
-
                 Forms\Components\TextInput::make('name')->columnSpanFull()->required()->maxLength(255),
                 Forms\Components\TextInput::make('email')->columnSpanFull()->required()->maxLength(255)->unique(ignoreRecord: true),
                 Forms\Components\TextInput::make('description')->columnSpanFull()->maxLength(255),
                 Forms\Components\TextInput::make('phone_no')->columnSpanFull()->tel(),  //TODO: put phone no in users table
-                Forms\Components\Checkbox::make('is_admin')->columnSpanFull(),
-                Forms\Components\TextInput::make('password')->password()->minLength(6)->confirmed()->maxLength(255)->dehydrated(fn($state) => filled($state))->nullable(),
+                Forms\Components\Checkbox::make('is_admin')->columnSpanFull()->label('Is Admin'),
+                Forms\Components\TextInput::make('password')->required()->password()->minLength(6)->confirmed()->maxLength(255)->dehydrated(fn($state) => filled($state))->nullable(),
                 Forms\Components\TextInput::make('password_confirmation')->label("Confirm password")->same('password')->password()->dehydrated(false),
-
-
             ]);
     }
 

@@ -5,6 +5,7 @@ namespace App\Filament\Resources;
 use App\Filament\Resources\StockResource\Pages;
 use App\Filament\Resources\StockResource\RelationManagers;
 use App\Models\Stocks;
+use App\Models\Products;
 use Filament\Forms;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
@@ -34,7 +35,7 @@ class StockResource extends Resource
         return $table
             ->columns([
                 Tables\Columns\TextColumn::make('id')->sortable()->label('ID'),
-                Tables\Columns\TextColumn::make('product.name')->sortable()->label('Product Name'),
+                Tables\Columns\TextColumn::make('Products::name')->sortable()->label('Product Name'),
                 Tables\Columns\TextColumn::make('price')->label('Price'),
                 Tables\Columns\TextColumn::make('quantity')->label('Quantity'),
             ])

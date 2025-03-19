@@ -15,15 +15,13 @@ use Illuminate\Database\Eloquent\SoftDeletingScope;
 
 class StocksResource extends Resource
 {
-    protected static ?string $model = Stocks::class;
-
-    protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
-
     public static function form(Form $form): Form
     {
         return $form
             ->schema([
-                //
+                Forms\Components\Select::make('product_id')->label('Product')->options(\App\Models\Products::pluck('name', 'id'))->searchable()->required(),
+                Forms\Components\Textarea::make('price')->columnSpanFull()->numeric(),
+                Forms\Components\Textarea::make('quantity')->columnSpanFull()->numeric(),
             ]);
     }
 
@@ -31,11 +29,12 @@ class StocksResource extends Resource
     {
         return $table
             ->columns([
-                //
+                Tables\Columns\TextColumn::make('id')->sortable()->label('ID'),
+                Tables\Columns\TextColumn::make('products.name')->sortable()->label('Product Name'),
+                Tables\Columns\TextColumn::make('price')->label('Price'),
+                Tables\Columns\TextColumn::make('quantity')->label('Quantity'),
             ])
-            ->filters([
-                //
-            ])
+            ->filters([])
             ->actions([
                 Tables\Actions\EditAction::make(),
             ])

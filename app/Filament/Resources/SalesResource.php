@@ -115,7 +115,7 @@ class SalesResource extends Resource
                 ->label('Discount Value')
                 ->numeric()
                 ->default(0)
-                ->reactive(),
+                ->reactive()->placeholder('Unfinished ,buggy'),
 
             Placeholder::make('display_final_amount')
                 ->label('Final Amount')
@@ -158,10 +158,18 @@ class SalesResource extends Resource
 
     private static function calculateFinalAmount(Set $set, Get $get)
     {
-        $total = collect($get('sale_items') ?? [])->sum(fn($item) => (Stocks::find($item['stock_id'])->price ?? 0) * ($item['quantity'] ?? 1));
-        $discount = $get('discount_type') === 'percentage' ? ($total * ($get('discount_value') ?? 0) / 100) : ($get('discount_value') ?? 0);
+        $total = collect($get('sale_items') ?? [])->sum(
+            fn($item) =>
+            (float) (Stocks::find($item['stock_id'])->price ?? 0) * (int) ($item['quantity'] ?? 1)
+        );
+
+        $discount = $get('discount_type') === 'percentage'
+            ? ($total * ((float) ($get('discount_value') ?? 0) / 100))
+            : (float) ($get('discount_value') ?? 0);
+
         return $set('final_amount', $total - $discount);
     }
+
 
     public static function table(Table $table): Table
     {
@@ -176,6 +184,11 @@ class SalesResource extends Resource
             ->filters([])
             ->actions([
                 Tables\Actions\EditAction::make(),
+                Tables\Actions\Action::make('view_invoice')
+                    ->label(__("View Invoice"))
+                    ->url(function ($record) {
+                        return self::getUrl('invoice', ['record' => $record]);
+                    })
             ])
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([
@@ -190,6 +203,7 @@ class SalesResource extends Resource
             'index' => Pages\ListSales::route('/'),
             'create' => Pages\CreateSales::route('/create'),
             'edit' => Pages\EditSales::route('/{record}/edit'),
+            'invoice' => Pages\Invoice::route('/{record}/invoice'),
         ];
     }
 }
