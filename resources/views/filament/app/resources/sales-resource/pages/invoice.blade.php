@@ -1,4 +1,5 @@
 
+<x-filament-panels::page>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -121,5 +122,6 @@
 
 </body>
 </html>
+</x-filament-panels::page>
 
 

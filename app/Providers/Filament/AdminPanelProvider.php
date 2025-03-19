@@ -26,7 +26,7 @@ class AdminPanelProvider extends PanelProvider
     {
         return $panel
 
-            ->id('admin')
+            ->id('admin')->brandName('POS')
             ->path('admin')->userMenuItems([
                 MenuItem::make()->label('App')
                     ->icon('heroicon-o-cog-6-tooth')

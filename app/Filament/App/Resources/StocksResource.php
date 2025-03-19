@@ -15,8 +15,11 @@ use Illuminate\Database\Eloquent\SoftDeletingScope;
 
 class StocksResource extends Resource
 {
+    protected static ?string $navigationIcon = 'heroicon-o-clipboard';
+    protected static ?string $navigationGroup = 'Product Management';
     public static function form(Form $form): Form
     {
+
         return $form
             ->schema([
                 Forms\Components\Select::make('product_id')->label('Product')->options(\App\Models\Products::pluck('name', 'id'))->searchable()->required(),

@@ -26,7 +26,7 @@ class AppPanelProvider extends PanelProvider
     {
         return $panel
             ->default()
-            ->id('app')->topNavigation()
+            ->id('app')->topNavigation()->brandName('POS')
             ->path('app')
             ->login()
             ->userMenuItems([

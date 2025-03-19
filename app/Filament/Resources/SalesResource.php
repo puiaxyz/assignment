@@ -13,12 +13,13 @@ use Filament\Forms\Form;
 use Filament\Tables\Table;
 use Filament\Facades\Filament;
 use Filament\Resources\Resource;
+use Filament\Forms\Components\Radio;
 use Filament\Forms\Components\Hidden;
 use Filament\Forms\Components\Select;
+use Filament\Forms\Components\Section;
 use Filament\Forms\Components\Repeater;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Components\Placeholder;
-use Filament\Forms\Components\Radio;
 use App\Filament\Resources\SalesResource\Pages;
 
 class SalesResource extends Resource
@@ -29,70 +30,76 @@ class SalesResource extends Resource
     public static function form(Form $form): Form
     {
         return $form->schema([
-            Hidden::make('user_id')
-                ->default(fn() => Filament::auth()->user()?->id)
-                ->dehydrated(false),
+            Section::make()->schema([
+                Hidden::make('user_id')
+                    ->default(fn() => Filament::auth()->user()?->id)
+                    ->dehydrated(),
+            ]),
 
             TextInput::make('invoice_number')
                 ->default('ABC' . random_int(100000, 999999))
                 ->disabled()
-                ->dehydrated(false),
-
-            Repeater::make('sale_items')
-                ->relationship('saleItems')
-                ->schema([
-                    Select::make('products_id')
-                        ->label('Product')
-                        ->options(fn() => Products::pluck('name', 'id'))
-                        ->searchable()
-                        ->reactive()
-                        ->required(),
-
-                    Select::make('stock_id')
-                        ->label('Stock')
-                        ->options(
-                            fn(Get $get) =>
-                            Stocks::where('products_id', $get('products_id'))
-                                ->pluck('price', 'id')
-                        )
-                        ->required()
-                        ->reactive()
-                        ->afterStateUpdated(
-                            fn(Set $set, Get $get, $state) =>
-                            $set('price_at_sale', \App\Models\Stocks::find($state)?->price ?? 0)
-                        ),
-
-                    TextInput::make('quantity')
-                        ->numeric()
-                        ->minValue(1)
-                        ->required()
-                        ->reactive(),
-
-                    Placeholder::make('total_price')
-                        ->label('Total Price')
-                        ->content(
-                            fn(Get $get) => ($get('stock_id') ?
-                                (\App\Models\Stocks::find($get('stock_id'))->price ?? 0)
-                                * ($get('quantity') ?? 1)
-                                : 0)
-                        ),
-
-                    Hidden::make('price_at_sale')
-                        ->dehydrated()
-                        ->afterStateHydrated(
-                            fn(Set $set, Get $get, $state) =>
-                            $set('price_at_sale', $state ?: (\App\Models\Stocks::find($get('stock_id'))?->price ?? 0))
-                        ),
-                ])
-                ->columns(4)
-                ->reactive(),
-
-            Placeholder::make('total_price')
-                ->label('Total Price')
-                ->content(fn(Get $get) => self::calculateTotalPrice($get)),
-
-            Hidden::make('price_at_sale')
                 ->dehydrated(),
+            Section::make()->schema([
+                TextInput::make('barcode')
+                    ->label('Scan Barcode')
+                    ->reactive()
+                    ->afterStateUpdated(fn(Set $set, Get $get, $state) => self::handleBarcode($set, $get, $state))->columnSpanFull()->live(onBlur: true),
+
+                Repeater::make('sale_items')
+                    ->relationship('saleItems')
+                    ->schema([
+                        Select::make('products_id')
+                            ->label('Product')
+                            ->options(fn() => Products::pluck('name', 'id'))
+                            ->searchable()
+                            ->reactive()
+                            ->required(),
+
+                        Select::make('stock_id')
+                            ->label('Stock')
+                            ->options(
+                                fn(Get $get) =>
+                                Stocks::where('products_id', $get('products_id'))
+                                    ->pluck('price', 'id')
+                            )
+                            ->required()
+                            ->reactive()
+                            ->afterStateUpdated(
+                                fn(Set $set, Get $get, $state) =>
+                                $set('price_at_sale', Stocks::find($state)?->price ?? 0)
+                            ),
+
+                        TextInput::make('quantity')
+                            ->numeric()
+                            ->minValue(1)
+                            ->required()
+                            ->reactive(),
+
+                        Placeholder::make('total_price')
+                            ->label('Total Price')
+                            ->content(
+                                fn(Get $get) => ($get('stock_id') ?
+                                    (Stocks::find($get('stock_id'))->price ?? 0)
+                                    * ($get('quantity') ?? 1)
+                                    : 0)
+                            )->columnSpanFull(),
+                        Hidden::make('price_at_sale')
+                            ->dehydrated()
+                            ->afterStateHydrated(
+                                fn(Set $set, Get $get, $state) =>
+                                $set('price_at_sale', $state ?: (Stocks::find($get('stock_id'))?->price ?? 0))
+                            ),
+                    ])
+                    ->columns()->columnSpanFull()
+                    ->reactive(),
+
+                Hidden::make('price_at_sale')
+                    ->dehydrated(),
+            ]),
+
+
+
 
             Placeholder::make('total_amount')
                 ->label('Total Amount')
@@ -115,7 +122,7 @@ class SalesResource extends Resource
                 ->label('Discount Value')
                 ->numeric()
                 ->default(0)
-                ->reactive()->placeholder('Unfinished ,buggy'),
+                ->reactive(),
 
             Placeholder::make('display_final_amount')
                 ->label('Final Amount')
@@ -128,8 +135,12 @@ class SalesResource extends Resource
                 ->label('Payment Method')
                 ->options(['upi' => 'UPI', 'cash' => 'Cash'])
                 ->default('cash'),
+
+
+
         ]);
     }
+
 
     private static function getProductOptions()
     {
