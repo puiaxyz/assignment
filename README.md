@@ -1,6 +1,6 @@
 # Laravel POS System
 
-This is a Laravel-based **Point of Sale (POS) System** with **Filament Admin Panel** integration made Thuamthangpuia MZU B.tech as part of the fulfillment of campus recruitment by Lailen Pvt Ltd. It supports **product management, sales tracking, barcode scanning**, and **invoice generation** and the system is mainly based around the Filament.
+This is a Laravel-based **Point of Sale (POS) System** with **Filament Admin Panel** integration made by Thuamthangpuia MZU B.tech as part of the fulfillment of campus recruitment by Lailen Pvt Ltd. It supports **product management, sales tracking, barcode scanning**, and **invoice generation** and the system is mainly based around the Filament.
 
 ## 📌 Prerequisites
 
@@ -53,13 +53,13 @@ php artisan migrate --seed
 ```
 This creates the necessary tables and seeds test data.
 
-### 7️⃣ Serve the Application
+### 6️⃣ Serve the Application
 ```sh
 php artisan serve
 ```
 Visit **http://127.0.0.1:8000** to access the application.
 
-### 6️⃣ Login Info 
+### 7️⃣ Login Info 
 ```sh
 ADMIN
 email:admin@test.com
@@ -69,7 +69,11 @@ Normal User
 email:test@test.com   
 password: password
 ```
+### Contact Info
+
+
+
 ---
-🚧 Work in Progress
-This project is still under development, with several features open to refinement and improvement. However, the core functionalities are operational. Users can already perform essential transactions, and the system is stable for basic usage. 
+###Work in Progress
+Note that this project is still under development, with several features open to refinement and improvement. However, the core functionalities are operational. Users can already perform essential transactions, and the system is available for basic usage. 
 
